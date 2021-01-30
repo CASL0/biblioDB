@@ -3,6 +3,7 @@ var addButton      = document.querySelector("#addButton");              //文献
 var filterCategory = document.querySelector("#filter");                 //フィルターの選択肢(デフォルト値：「すべて」)
 var filterButton   = document.querySelector("#filterButton");           //フィルターの絞り込むボタン
 var biblioInfo     = document.querySelectorAll("input[type = text]");   //文献情報入力フォーム
+var db;
 
 main();
 
@@ -28,7 +29,7 @@ function isAllInput(input) {
     return true;
 }
 
-function displayBiblio(db, category) {
+function displayBiblio(category) {
     //文献リストをクリアする
     while (table.firstChild) {
         table.removeChild(table.firstChild);
@@ -52,11 +53,11 @@ function displayBiblio(db, category) {
     row.appendChild(rowCategory);
     row.appendChild(rowIsbn);
 
-    select(db, category);
+    select(category);
     console.log("Biblio all displayed");
 }
 
-function select(db, category) {
+function select(category) {
     var objectStore = db.transaction("biblio", "readwrite").objectStore("biblio");
     objectStore.openCursor().onsuccess = function (e) {
         var cursor = e.target.result;
@@ -119,11 +120,22 @@ function addNewCategory(newCategory) {
     filterCategory.appendChild(option);
 }
 
+function showMsg(msgStr) {
+    var msg = document.querySelector("#msgAdd");
+    msg.textContent = msgStr;
+    msg.style.display = "block";
+    setTimeout(hideMsg, 2000);
+}
+
+function hideMsg() {
+    var msg = document.querySelector("#msgAdd");
+    msg.style.display = "none";
+}
+
 function main() {
     setupInputForm(biblioInfo);
     console.log("setupInputForm succeeded");
 
-    var db;
     window.onload = function() {
         if (!window.indexedDB) {
             window.alert(
@@ -159,5 +171,41 @@ function main() {
             db = request.result;
             displayBiblio(db, "すべて");
         };
+
+        addButton.addEventListener("click", function () {
+          if (addButton.getAttribute("class") === "disabled") {
+            return;
+          }
+          var titleInput    = document.querySelector("#title");
+          var authorInput   = document.querySelector("#author");
+          var categoryInput = document.querySelector("#category");
+          var isbnInput     = document.querySelector("#isbn");
+
+          var newItem = {
+            title:    titleInput.value,
+            author:   authorInput.value,
+            category: categoryInput.value,
+            isbn:     isbnInput.value,
+          };
+
+          var transaction = db.transaction("biblio", "readwrite");
+          var objectStore = transaction.objectStore("biblio");
+
+          var request = objectStore.put(newItem);
+          request.onsuccess = function () {
+            displayBiblio("すべて");
+            titleInput.value = authorInput.value = categoryInput.value = isbnInput.value = "";
+            showMsg("追加しました");
+            addButton.setAttribute("class", "disabled");
+          };
+          transaction.oncomplete = function () {
+            console.log(
+              "Transaction completed: database modification finished"
+            );
+          };
+          transaction.onerror = function () {
+            console.log("Transaction not opened due to error");
+          };
+        });
     };
 }
