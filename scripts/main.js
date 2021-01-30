@@ -84,8 +84,10 @@ function select(category) {
                 tdCategory.textContent = cursor.value.category;
                 tdIsbn.textContent     = cursor.value.isbn;
 
-                createBtnColumn(tr, removeBiblio , "削除");
+                createBtnColumn(tr, removeBiblio, "削除");
+                console.log('remove button created')
                 createBtnColumn(tr, displayDetail, "詳細");
+                console.log('detail button created');
             }
 
             cursor.continue();
@@ -116,6 +118,7 @@ function addNewCategory(newCategory) {
     var option = document.createElement("option");
     option.textContent = newCategory;
     filterCategory.appendChild(option);
+    console.log('adding category');
 }
 
 function showMsg(msgStr) {
@@ -141,6 +144,7 @@ function removeBiblio(event) {
     //DBから削除したカテゴリーのアイテムが無くなった場合は、フィルターオプションからも削除する
     index.get(row.children[2].textContent).onsuccess = function (e) {
         if (!(e.target.result)) {
+            console.log('removing category: ' + row.children[2].textContent);
             removeCategory(row);
         }
     }
@@ -161,7 +165,55 @@ function removeCategory(row) {
 }
 
 function displayDetail(event) {
-    
+    var imgDiv = document.querySelector("#imgDiv");
+    var descriptionDiv = document.querySelector("#descriptionDiv");
+    while (imgDiv.firstChild) {
+      imgDiv.removeChild(imgDiv.firstChild);
+    }
+    while (descriptionDiv.firstChild) {
+      descriptionDiv.removeChild(descriptionDiv.firstChild);
+    }
+
+    var URL = "https://api.openbd.jp/v1/get?isbn=";
+    var ISBN = String(
+      event.target.parentNode.parentNode.children[3].textContent
+    );
+    URL += ISBN;
+    var request = new XMLHttpRequest();
+    request.open("GET", URL);
+    request.responseType = "json";
+    request.send();
+
+    request.onload = function () {
+        console.log(request.response);
+        console.log('response received');
+        var imgURL = request.response[0]["summary"]["cover"];
+        var img = document.createElement("img");
+        img.setAttribute("src", imgURL);
+        img.setAttribute("alt", "画像がありません");
+        imgDiv.appendChild(img);
+
+        addDescription(
+            "タイトル：「" + request.response[0]["summary"]["title"] + "」"
+        );
+        addDescription("著者：" + request.response[0]["summary"]["author"]);;
+        addDescription("出版社：" + request.response[0]["summary"]["publisher"]);
+        addDescription("出版日：" + request.response[0]["summary"]["pubdate"]);
+
+        var descriptionObj =
+            request.response[0]["onix"]["CollateralDetail"]["TextContent"];
+        for (var i = 0; i < descriptionObj.length; i++) {
+            addDescription(descriptionObj[i]["Text"]);
+        }
+        console.log('detail displayed')
+    };
+}
+
+function addDescription(str) {
+    var p = document.createElement("p");
+    p.textContent = str;
+    var descriptionDiv = document.querySelector("#descriptionDiv");
+    descriptionDiv.appendChild(p);
 }
 
 function main() {
