@@ -57,9 +57,66 @@ function displayBiblio(db, category) {
 }
 
 function select(db, category) {
-  var objectStore = db.transaction("biblio", "readwrite").objectStore("biblio");
-  objectStore.openCursor().onsuccess = function (e) {
-  };
+    var objectStore = db.transaction("biblio", "readwrite").objectStore("biblio");
+    objectStore.openCursor().onsuccess = function (e) {
+        var cursor = e.target.result;
+        if (cursor) {
+            addNewCategory(cursor.value.category);
+
+            //カーソルを当てているエントリーが、表示の対象外の場合はスキップ
+            if (category !== "すべて" && cursor.value.category !== category) {
+                cursor.continue();
+            }
+
+            var tr = document.createElement("tr");
+            table.appendChild(tr);
+            var thTitle    = document.createElement("th");
+            var tdAuthor   = document.createElement("td");
+            var tdCategory = document.createElement("td");
+            var tdIsbn     = document.createElement("td");
+
+            tr.appendChild(thTitle);
+            tr.appendChild(tdAuthor);
+            tr.appendChild(tdCategory);
+            tr.appendChild(tdIsbn);
+            tr.setAttribute("biblio-id", cursor.value.id);
+
+            thTitle.textContent    = cursor.value.title;
+            tdAuthor.textContent   = cursor.value.author;
+            tdCategory.textContent = cursor.value.category;
+            tdIsbn.textContent     = cursor.value.isbn;
+            
+            createBtnColumn(tr, removeBiblio , "削除");
+            createBtnColumn(tr, displayDetail, "詳細");
+
+            cursor.continue();
+        }
+    };
+}
+
+function createBtnColumn(parentRow, eventHandler, btnText) {
+    var removeButton = document.createElement("button");
+    removeButton.textContent = btnText;
+    removeButton.setAttribute("class", "button");
+    removeButton.onclick = eventHandler;
+    var rowRemoveButton = document.createElement("td");
+    rowRemoveButton.appendChild(removeButton);
+    rowRemoveButton.setAttribute("class", "buttonTd");
+    parentRow.appendChild(rowRemoveButton);
+}
+
+function addNewCategory(newCategory) {
+    var categories = filterCategory.children;
+    for (const elem of categories) {
+      if (elem === newCategory) {
+        return;
+      }
+    }
+
+    //新規カテゴリを追加する
+    var option = document.createElement("option");
+    option.textContent = newCategory;
+    filterCategory.appendChild(option);
 }
 
 function main() {
