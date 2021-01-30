@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>文献データベース</title>
+	<meta charset="utf-8">	
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<div id="headerDiv">
+文献データベース
+</div>
+</header>
+<div id="additionDiv">
+	<div>
+		<span class="label">
+			<label for="title">タイトル：</label>
+		</span>
+		<span>	
+			<input type="text" id="title" required>
+		</span>
+	</div>	
+	<div>
+		<span class="label">		
+			<label for="author">著者：</label>
+		</span>
+		<span>
+			<input type="text" id="author"  required>
+		</span>
+	</div>	
+	<div>
+		<span class="label">
+			<label for="category">カテゴリー：</label>
+		</span>
+		<span>
+			<input type="text" id="category" required>
+		</span>
+	</div>
+	<div>
+		<span class="label">
+			<label for="isbn">ISBN：</label>
+		</span>
+		<span>
+			<input type="text" id="isbn" required>
+		</span>
+	</div>	
+	<div>	
+	<span id="addButton" class="disabled" >追加</span>
+	<div id="msgAdd">
+	</div>
+	</div>	
+</div>
+<div id="bodyDiv">
+	<aside>
+		<div>
+		<label for="カテゴリー">カテゴリー:</label>
+		<select id="filter">
+			<option>すべて</option>	
+		</select>	
+		</div>	
+		<div>
+		<span id="filterButton" class="button">絞り込む</span>	
+		</div>	
+	</aside>
+	<main>
+		<table border="1">
+			<tr>
+				<th>タイトル</th>	
+				<td>著者</td>	
+				<td>カテゴリー</td>	
+				<td>ISBN</td>	
+			</tr>	
+		</table>
+	</main>
+</div>
+<div id="detailDiv">
+	<div id="imgDiv">
+	</div>
+	<div id="descriptionDiv">
+	</div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
+
