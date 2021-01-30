@@ -146,6 +146,10 @@ function removeBiblio(event) {
             removeCategory(row);
         }
     }
+
+    transaction.oncomplete = function () {
+        row.parentNode.removeChild(row);
+    };
 }
 
 function removeCategory(row) {
