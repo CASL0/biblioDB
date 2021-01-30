@@ -158,6 +158,10 @@ function removeCategory(row) {
     }
 }
 
+function displayDetail(event) {
+    
+}
+
 function main() {
     setupInputForm(biblioInfo);
     console.log("setupInputForm succeeded");
@@ -233,5 +237,10 @@ function main() {
             console.log("Transaction not opened due to error");
           };
         });
+
+        filterButton.onclick = function () {
+            var category = filter.options[filter.selectedIndex].textContent;
+            displayBiblio(category);
+        };
     };
 }
