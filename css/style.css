@@ -1,0 +1,132 @@
+body{
+	background-color:#fffaf0;	
+	width:90%;
+	margin:0 auto;
+}
+
+header{
+	margin-top:20px;
+}
+
+#headerDiv{
+	text-align:center;
+	border-top:3px black solid;
+	border-bottom:3px black solid;
+	font-size:35px;
+}
+
+#additionDiv{
+	text-align:center;
+	font-size:20px;
+	border-bottom:3px black solid;
+	padding-top:20px;
+}
+
+.label{
+	text-align:right;
+	display:inline-block;
+	width:150px;
+}
+
+#additionDiv div{
+	margin-bottom:20px;
+}
+
+#additionDiv input{
+	font-size:20px;
+	text-align:center;
+	width:400px;
+}
+
+#addButton{
+	padding:8px 50px;
+}
+.button{
+	border-radius:5px;
+	background-color:white;
+	color:black;
+	border:1px solid black;
+}
+.button:hover{
+	cursor:pointer;
+	background-color:black;
+	color:white;
+}
+
+.disabled{
+	border-radius:5px;
+	background-color:#fafafa;
+	color:#bdbdbd;
+	border:1px solid #bdbdbd;
+}
+
+#bodyDiv{
+	border-bottom:3px black solid;
+	display:flex;
+}
+#bodyDiv aside{
+	font-size:15px;
+	flex:25%;
+	border-right:3px black solid;
+	height:300px;
+	text-align:center;
+	padding:20px 0;
+	
+}
+
+#bodyDiv aside div{
+	margin-bottom:30px;
+}
+
+#bodyDiv aside select{
+	font-size:15px;
+}
+
+#bodyDiv main{
+	font-size:20px;
+	flex:75%;
+	height:300px;
+	padding:20px;
+	overflow:scroll;
+}
+
+#filterButton{
+	border:1px solid black;
+	font-size:15px;
+	display:inline-block;
+	padding:5px 50px;
+}
+th,td{
+	text-align:center;
+	width:300px;	
+	padding:0;
+}
+
+.buttonTd{
+	width:50px;
+}
+
+#detailDiv{
+	padding:20px;
+	display:inline-block;
+	min-width:100%;
+}
+
+#imgDiv{
+	float:left;	
+	height:400px;
+	width:300px;
+	margin:20px;
+}
+
+#imgDiv img{
+	height:100%;
+	width:100%;
+}
+
+#msgAdd{
+	text-align:center;
+	display:none;
+	margin-top:20px;
+}
+
