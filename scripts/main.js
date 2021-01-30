@@ -65,30 +65,28 @@ function select(category) {
             addNewCategory(cursor.value.category);
 
             //カーソルを当てているエントリーが、表示の対象外の場合はスキップ
-            if (category !== "すべて" && cursor.value.category !== category) {
-                cursor.continue();
+            if (category === "すべて" || cursor.value.category === category) {
+                var tr = document.createElement("tr");
+                table.appendChild(tr);
+                var thTitle    = document.createElement("th");
+                var tdAuthor   = document.createElement("td");
+                var tdCategory = document.createElement("td");
+                var tdIsbn     = document.createElement("td");
+
+                tr.appendChild(thTitle);
+                tr.appendChild(tdAuthor);
+                tr.appendChild(tdCategory);
+                tr.appendChild(tdIsbn);
+                tr.setAttribute("biblio-id", cursor.value.id);
+
+                thTitle.textContent    = cursor.value.title;
+                tdAuthor.textContent   = cursor.value.author;
+                tdCategory.textContent = cursor.value.category;
+                tdIsbn.textContent     = cursor.value.isbn;
+
+                createBtnColumn(tr, removeBiblio , "削除");
+                createBtnColumn(tr, displayDetail, "詳細");
             }
-
-            var tr = document.createElement("tr");
-            table.appendChild(tr);
-            var thTitle    = document.createElement("th");
-            var tdAuthor   = document.createElement("td");
-            var tdCategory = document.createElement("td");
-            var tdIsbn     = document.createElement("td");
-
-            tr.appendChild(thTitle);
-            tr.appendChild(tdAuthor);
-            tr.appendChild(tdCategory);
-            tr.appendChild(tdIsbn);
-            tr.setAttribute("biblio-id", cursor.value.id);
-
-            thTitle.textContent    = cursor.value.title;
-            tdAuthor.textContent   = cursor.value.author;
-            tdCategory.textContent = cursor.value.category;
-            tdIsbn.textContent     = cursor.value.isbn;
-            
-            createBtnColumn(tr, removeBiblio , "削除");
-            createBtnColumn(tr, displayDetail, "詳細");
 
             cursor.continue();
         }
