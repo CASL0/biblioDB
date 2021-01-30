@@ -109,7 +109,7 @@ function createBtnColumn(parentRow, eventHandler, btnText) {
 function addNewCategory(newCategory) {
     var categories = filterCategory.children;
     for (const elem of categories) {
-      if (elem === newCategory) {
+      if (elem.textContent === newCategory) {
         return;
       }
     }
@@ -130,6 +130,32 @@ function showMsg(msgStr) {
 function hideMsg() {
     var msg = document.querySelector("#msgAdd");
     msg.style.display = "none";
+}
+
+function removeBiblio(event) {
+    var row = event.target.parentNode.parentNode;
+    var id = Number(row.getAttribute('biblio-id'));
+    var transaction = db.transaction('biblio', 'readwrite');
+    var objectStore = transaction.objectStore('biblio');
+    var request = objectStore.delete(id);
+    var index = objectStore.index('category');
+
+    //DBから削除したカテゴリーのアイテムが無くなった場合は、フィルターオプションからも削除する
+    index.get(row.children[2].textContent).onsuccess = function (e) {
+        if (!(e.target.result)) {
+            removeCategory(row);
+        }
+    }
+}
+
+function removeCategory(row) {
+    var category = row.children[2].textContent;
+    var categories = filterCategory.children;
+    for (var i = 0; i < categories.length; i++) {
+        if (categories[i].textContent === category) {
+            filterCategory.removeChild(filterCategory.children[i]);
+        }
+    }
 }
 
 function main() {
